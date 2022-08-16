@@ -4,9 +4,12 @@ if (document.readyState == "loading"){
     ready()
 }
 
+
+
+
+// Funciones principales de carrito
 function ready() {
     let removerCarrito = document.getElementsByClassName("botonRemover")
-    console.log(removerCarrito)
     for (let i = 0; i < removerCarrito.length; i++) {
         let boton = removerCarrito[i]
         boton.addEventListener("click", removerItemCarrito)
@@ -24,32 +27,38 @@ function ready() {
     document.getElementsByClassName("botonCompra")[0].addEventListener("click", compraClick)
 }
 
-/* 
-//Objetos productos
-class Producto{
-    constructor (name, id, precio, stock,){
-    this.name =  name;
-    this.id = id;
-    this.precio = precio
-    this.stock = stock;
-    }
-}
+/*
 
-const producto1= new Producto ("Sauron", 1, 1500, 5)
-const producto2= new Producto ("Frodo Bolson", 2, 2000, 5)
-const producto3= new Producto ("Smaug", 3, 1800, 3)
-const producto4= new Producto ("Stormtrooper", 4, 800, 25)
-const producto5= new Producto ("Darth Vader", 5, 1200, 10)
-const producto6= new Producto ("Han Solo", 6, 1400, 15 )
+Insercion de objetos en el html. Surgio un error aqui, intente descubrir en primera instancia que sucedia y 
+lo que sucedia era que el html insertado no reconocia los addEventListeners. Intente encontrar una solucion,
+una posibilidad era utilizar insertAdjacentHTML. Sin embargo esto no funciono, 
+dejo el codigo comentado para saber si se puede utilizar alguna solucion.
 
-const productos = [producto1, producto2, producto3, producto4, producto5, producto6]
 
-console.log(productos) */
+
+const divProductos = document.getElementById("divProductos")
+
+fetch("./json/productos.json")
+.then(promise => promise.json())
+.then(data => {
+    data.forEach(producto => {
+        divProductos.insertAdjacentHTML("afterbegin", `
+        <div class="itemProducto container card col-md-6 p-3">
+            <span class="itemProducto-title">${producto.name}</span>
+            <div class="itemProducto-details">
+                <span class="itemProducto-price">$${producto.price}</span>
+                <button class="btn btn-primary agregarItem__boton" type="button">Añadir al carrito</button>
+            </div>
+        </div>
+        `)
+    })
+})
+*/
 
 //Carrito y productos
 
 function compraClick(){
-    alert("Gracias por su compra")
+    Swal.fire("Gracias por su compra")
     let cartItems= document.getElementsByClassName("cart-items")[0]
     while (cartItems.hasChildNodes()){
         cartItems.removeChild(cartItems.firstChild)
@@ -60,6 +69,18 @@ function compraClick(){
 function removerItemCarrito (e){
     let botonClick = e.target
     botonClick.parentElement.parentElement.remove()
+    Toastify({
+        text: "Producto eliminado",
+        duration: 3000,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+        background: "linear-gradient(to right, #34A0EA, #1261C0)",
+        },
+        onClick: function(){} // Callback after click
+    }).showToast();
     actualizarCarrito()
 }
 
@@ -76,8 +97,6 @@ function agregarCarritoClick(e) {
     let itemProducto = boton.parentElement.parentElement
     let title = itemProducto.getElementsByClassName("itemProducto-title")[0].innerText
     let price = itemProducto.getElementsByClassName("itemProducto-price")[0].innerText
-    // let img = itemProducto.getEelemtsByClassName("itemProducto-img")[0].src
-
     agregarAlCarrito(title, price)
     actualizarCarrito()
 }
@@ -89,16 +108,16 @@ function agregarAlCarrito(title, price){
     let cartItemsNames = cartItems.getElementsByClassName("cart-item-title")
     for (let i = 0; i < cartItemsNames.length; i++) {
         if (cartItemsNames[i].innerText == title){
-            alert("Este item ya esta en el carrito")
+            Swal.fire("Este item ya se encuentra en el carrito")
             return
         }
     }
     let cartRowContenido = `
         <div class="cart-item cart-column">
-            <span class="cart-item-title">${title}</span>
+            <span class="cart-item-title d-flex justify-content-start p-2">${title}</span>
         </div>
-        <span class="precioCarrito cart-column">${price}</span>
-        <div class="cart-quantity cart-column">
+        <span class="precioCarrito cart-column d-flex justify-content-center p-2">${price}</span>
+        <div class="cart-quantity cart-column d-flex justify-content-end p-2">
             <input class="cantidadCarrito__input" type="number" value="1">
             <button id="removerCarrito" class="btn btn-danger botonRemover" type="button">Quitar</button>
         </div>
@@ -109,6 +128,7 @@ function agregarAlCarrito(title, price){
     cartRow.getElementsByClassName("cantidadCarrito__input")[0].addEventListener("change", cambioCantidad)
 }
 
+//Actualizador 
 function actualizarCarrito(){
     let contenedorCarrito = document.getElementsByClassName("cart-items")[0]
     let cartRows = contenedorCarrito.getElementsByClassName("cart-row")
@@ -124,3 +144,7 @@ function actualizarCarrito(){
     total = Math.round(total *100)/ 100
     document.getElementsByClassName("precioTotalCarrito")[0].innerText = "$" + total
 }
+
+
+// Login
+

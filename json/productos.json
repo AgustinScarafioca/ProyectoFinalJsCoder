@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "name" : "Sauron",
+        "price" : 1500,
+        "stock" : 5
+    },
+    {
+        "id": 2,
+        "name" : "Frodo Bolson",
+        "price" : 2000,
+        "stock" : 5
+    },
+    {
+        "id": 3,
+        "name" : "Smaug",
+        "price" : 1800,
+        "stock" : 3
+    },
+    {
+        "id": 4,
+        "name" : "Stormtrooper",
+        "price" : 800,
+        "stock" : 25
+    },
+    
+    {
+        "id": 5,
+        "name" : "Darth Vader",
+        "price" : 1200,
+        "stock" : 10
+    },
+    {
+        "id": 6,
+        "name" : "Han Solo",
+        "price" : 1400,
+        "stock" : 15
+    }
+]
